@@ -125,8 +125,8 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
       };
     default:
       return {
-        statusCode: 200,
-        body: 'an unsupported webhook was passed to the server. just gonna return a 200 for u'
+        statusCode: 404,
+        body: 'a webhook event of an unsupported type was passed to the server'
       };
   }
 };
