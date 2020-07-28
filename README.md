@@ -32,6 +32,7 @@ DISCORD_WEBHOOK_ID /* Webhook ID for a channel specific webhook (second-last pat
 DISCORD_WEBHOOK_TOKEN /* Webhook token (last path component of the webhook URL) */
 UP_AUTH_TOKEN /* Up Bank API Personal Token */
 UP_WEBHOOK_SECRET /* Up Bank Webhook Secret */
+UP_ACCOUNT_HOLDER /* The name to use for Discord messages */
 ```
 4. Deploy
 5. Test with a ping and by transferring some money from your savings account to spending

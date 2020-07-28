@@ -53,7 +53,7 @@ async function ratOutTransaction(transaction: Relationship) {
     });
   }
 
-  await hook.send(`${'Evan'} just ${action} $${money} on ${description}`, {
+  await hook.send(`${process.env.UP_ACCOUNT_HOLDER ?? 'The bot owner'} just ${action} $${money} on ${description}!`, {
     embeds: [
       {
         title: cashback ? 'New Reimbursement' : 'New Purchase',
