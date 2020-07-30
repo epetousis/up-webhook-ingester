@@ -2,11 +2,15 @@
 
 An AWS Lambda function to ingest UpBank payloads and forwards them to Discord, ~~so that my friends can laugh at me~~
 
-Feel free to use this yourself, or steal the TypeScript type definitions idk I don't care
+Feel free to use this yourself or reuse the type definitions.
+
+![A screenshot of the bot in action in Discord](docs/screenshot.png)
 
 ## Important clarification
 
-This was hacked together in like an hour or two for fun, please don't judge
+This was hacked together in like an hour or two for fun, please don't judge _too_ hard.
+
+This Lambda function relies on the default environment variable encryption to store the Up API token, which isn't entirely recommended.
 
 ## How to install
 
