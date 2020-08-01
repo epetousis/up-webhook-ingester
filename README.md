@@ -16,7 +16,7 @@ This Lambda function relies on the default environment variable encryption to st
 
 Warning: this uses AWS Lambda.
 
-1. Get a Lambda function
+1. Install [Serverless](https://www.serverless.com/framework/docs/getting-started/).
 2. POST to `https://api.up.com.au/api/v1/webhooks with this body:
 ```json
 {
@@ -29,15 +29,17 @@ Warning: this uses AWS Lambda.
 ```
 Where `url` is the endpoint for your Lambda function.
 
-3. Set these environment variables:
+3. Create a config.json in the root code directory and replace the comments with your appropriate values:
 
-```javascript
-DISCORD_WEBHOOK_ID /* Webhook ID for a channel specific webhook (second-last path component of the webhook URL) */
-DISCORD_WEBHOOK_TOKEN /* Webhook token (last path component of the webhook URL) */
-UP_AUTH_TOKEN /* Up Bank API Personal Token */
-UP_WEBHOOK_SECRET /* Up Bank Webhook Secret */
-UP_ACCOUNT_HOLDER /* The name to use for Discord messages */
+```json
+{
+    "DISCORD_WEBHOOK_ID": "/* Webhook ID for a channel specific webhook (second-last path component of the webhook URL) */",
+    "DISCORD_WEBHOOK_TOKEN": "/* Webhook token (last path component of the webhook URL) */",
+    "UP_ACCOUNT_HOLDER": "/* The name to use for Discord messages */",
+    "UP_AUTH_TOKEN": "/* Up Bank API Personal Token */",
+    "UP_WEBHOOK_SECRET": "/* Up Bank Webhook Secret retrieved from the API upon webhook creation */"
+}
 ```
-4. Deploy
+4. Run `npm deploy`. You may need to update the profile and region in the `serverless.yml` config or add `--region [aws region] --aws-profile [profile]` to the end of the deploy script in `package.json`.
 5. Test with a ping and by transferring some money from your savings account to spending
 6. Lose all self esteem
