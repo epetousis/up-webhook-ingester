@@ -5,7 +5,8 @@
   "description": "Ingests UpBank webhooks and generates Discord-compatible payloads as output",
   "main": "index.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "deploy": "tsc && sls deploy"
   },
   "author": "",
   "license": "MIT",

@@ -1,4 +1,4 @@
-import { APIGatewayProxyHandler, APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
+import { APIGatewayProxyHandlerV2, APIGatewayProxyResultV2, APIGatewayProxyEventV2 } from 'aws-lambda';
 import Discord from 'discord.js';
 import fetch, { Headers } from 'node-fetch';
 import crypto from 'crypto';
@@ -74,7 +74,7 @@ async function pingPong() {
   await hook.send("Someone just pinged the Up API using this bot's token. Just checking in to say: pong.");
 }
 
-export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler: APIGatewayProxyHandlerV2 = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
   console.log('Received event', event);
 
   if (!process.env.UP_WEBHOOK_SECRET) {
@@ -91,7 +91,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const hmac = crypto.createHmac('sha256', process.env.UP_WEBHOOK_SECRET);
   hmac.update(event.body);
   const signature = hmac.digest('hex');
-  const receivedSignature = event.headers['x-up-authenticity-signature'];
+  const receivedSignature = event.headers['X-Up-Authenticity-Signature'];
 
   if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(receivedSignature))) {
     return {

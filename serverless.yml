@@ -1,0 +1,39 @@
+service:
+    name: up-webhook-ingester
+
+provider:
+    name: aws
+    profile: personalacc
+    region: ap-southeast-2
+    stage: ${opt:stage, 'dev'}
+
+package:
+    individually: true
+    exclude:
+        - .git/**
+        - src/**
+        - docs/**
+        - README.md
+        - tsconfig.json
+        - config.json
+
+functions:
+    ingesterFunction:
+        handler: dist/index.handler
+        runtime: nodejs12.x
+        memorySize: 128
+        timeout: 10
+        events:
+            - http:
+                path: /webhook
+                method: post
+                request:
+                    parameters:
+                        headers:
+                            X-Up-Authenticity-Signature: true
+        environment:
+            DISCORD_WEBHOOK_ID: ${file(./config.json):DISCORD_WEBHOOK_ID}
+            DISCORD_WEBHOOK_TOKEN: ${file(./config.json):DISCORD_WEBHOOK_TOKEN}
+            UP_ACCOUNT_HOLDER: ${file(./config.json):UP_ACCOUNT_HOLDER}
+            UP_AUTH_TOKEN: ${file(./config.json):UP_AUTH_TOKEN}
+            UP_WEBHOOK_SECRET: ${file(./config.json):UP_WEBHOOK_SECRET}
