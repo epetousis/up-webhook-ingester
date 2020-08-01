@@ -71,7 +71,7 @@ async function pingPong() {
   }
 
   const hook = new Discord.WebhookClient(process.env.DISCORD_WEBHOOK_ID, process.env.DISCORD_WEBHOOK_TOKEN);
-  await hook.send("Someone just pinged the Up API using this bot's token. Just checking in to say: pong.");
+  await hook.send("Someone just pinged the Up API which, in turn, pinged this bot. Just checking in to say: pong.");
 }
 
 export const handler: APIGatewayProxyHandlerV2 = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
