@@ -24,10 +24,16 @@ async function ratOutTransaction(transaction: Relationship) {
   }
 
   const description = res.data.attributes.description;
+  const isPurchase = res.data.attributes.amount.value.includes('-');
   const money = res.data.attributes.amount.value.replace('-', '');
 
   const foreignCurrency = res.data.attributes.foreignAmount?.currencyCode;
   const foreignAmount = res.data.attributes.foreignAmount?.value.replace('-', '');
+
+  if (!isPurchase && Number(money) > 100) {
+    // Cap reimbursements at $100 to avoid leaking salaries.
+    return;
+  }
 
   const status = res.data.attributes.status.toLowerCase();
 
