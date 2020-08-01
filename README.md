@@ -40,6 +40,6 @@ Where `url` is the endpoint for your Lambda function.
     "UP_WEBHOOK_SECRET": "/* Up Bank Webhook Secret retrieved from the API upon webhook creation */"
 }
 ```
-4. Run `npm deploy`. You may need to update the profile and region in the `serverless.yml` config or add `--region [aws region] --aws-profile [profile]` to the end of the deploy script in `package.json`.
+4. Run `npm run deploy`. You may need to update the profile and region in the `serverless.yml` config or add `--region [aws region] --aws-profile [profile]` to the end of the deploy script in `package.json`.
 5. Test with a ping and by transferring some money from your savings account to spending
 6. Lose all self esteem
