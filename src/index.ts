@@ -2,19 +2,25 @@ import { APIGatewayProxyHandlerV2, APIGatewayProxyResultV2, APIGatewayProxyEvent
 import Discord from 'discord.js';
 import fetch, { Headers } from 'node-fetch';
 import crypto from 'crypto';
+// eslint-disable-next-line import/extensions
 import { WebhookResponse, Relationship, TransactionResponse } from './upbank';
 
 async function ratOutTransaction(transaction: Relationship) {
-  if (!process.env.DISCORD_WEBHOOK_ID || !process.env.DISCORD_WEBHOOK_TOKEN || !process.env.UP_AUTH_TOKEN) {
+  if (!process.env.DISCORD_WEBHOOK_ID
+    || !process.env.DISCORD_WEBHOOK_TOKEN
+    || !process.env.UP_AUTH_TOKEN) {
     return;
   }
 
-  const hook = new Discord.WebhookClient(process.env.DISCORD_WEBHOOK_ID, process.env.DISCORD_WEBHOOK_TOKEN);
+  const hook = new Discord.WebhookClient(
+    process.env.DISCORD_WEBHOOK_ID,
+    process.env.DISCORD_WEBHOOK_TOKEN,
+  );
 
   const rawResponse = await fetch(transaction.links.related, {
     headers: new Headers({
-      'Authorization': `Bearer ${process.env.UP_AUTH_TOKEN}`
-    })
+      Authorization: `Bearer ${process.env.UP_AUTH_TOKEN}`,
+    }),
   });
 
   const res: TransactionResponse = await rawResponse.json();
@@ -23,7 +29,7 @@ async function ratOutTransaction(transaction: Relationship) {
     throw new Error(`Errors detected while getting transaction. Ensure your API token is correct. ${JSON.stringify(res.errors)}`);
   }
 
-  const description = res.data.attributes.description;
+  const { description, cashback } = res.data.attributes;
   const isPurchase = res.data.attributes.amount.value.includes('-');
   const money = res.data.attributes.amount.value.replace('-', '');
 
@@ -41,8 +47,6 @@ async function ratOutTransaction(transaction: Relationship) {
 
   const status = res.data.attributes.status.toLowerCase();
 
-  const cashback = res.data.attributes.cashback;
-
   const action = cashback ? 'got reimbursed' : 'spent';
 
   const fields = [
@@ -59,7 +63,7 @@ async function ratOutTransaction(transaction: Relationship) {
   if (foreignAmount && foreignCurrency) {
     fields.push({
       name: 'Foreign Currency',
-      value: `${foreignCurrency} ${foreignAmount}`
+      value: `${foreignCurrency} ${foreignAmount}`,
     });
   }
 
@@ -69,9 +73,9 @@ async function ratOutTransaction(transaction: Relationship) {
         title: cashback ? 'New Reimbursement' : 'New Purchase',
         description: `Transaction was ${status}.`,
         color: 16743012,
-        fields
-      }
-    ]
+        fields,
+      },
+    ],
   });
 }
 
@@ -80,10 +84,14 @@ async function pingPong() {
     return;
   }
 
-  const hook = new Discord.WebhookClient(process.env.DISCORD_WEBHOOK_ID, process.env.DISCORD_WEBHOOK_TOKEN);
-  await hook.send("Someone just pinged the Up API which, in turn, pinged this bot. Just checking in to say: pong.");
+  const hook = new Discord.WebhookClient(
+    process.env.DISCORD_WEBHOOK_ID,
+    process.env.DISCORD_WEBHOOK_TOKEN,
+  );
+  await hook.send('Someone just pinged the Up API which, in turn, pinged this bot. Just checking in to say: pong.');
 }
 
+// eslint-disable-next-line import/prefer-default-export, max-len
 export const handler: APIGatewayProxyHandlerV2 = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
   console.log('Received event', event);
 
@@ -94,8 +102,8 @@ export const handler: APIGatewayProxyHandlerV2 = async (event: APIGatewayProxyEv
   if (!event.body) {
     return {
       statusCode: 400,
-      body: "don't care didn't ask plus you're malformed"
-    }
+      body: "don't care didn't ask plus you're malformed",
+    };
   }
 
   const hmac = crypto.createHmac('sha256', process.env.UP_WEBHOOK_SECRET);
@@ -106,37 +114,37 @@ export const handler: APIGatewayProxyHandlerV2 = async (event: APIGatewayProxyEv
   if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(receivedSignature))) {
     return {
       statusCode: 403,
-      body: 'bad signature'
-    }; 
+      body: 'bad signature',
+    };
   }
 
   const payload: WebhookResponse = JSON.parse(event.body);
 
   switch (payload.data.attributes.eventType) {
     case 'TRANSACTION_CREATED': {
-      const transaction = payload.data.relationships.transaction;
+      const { transaction } = payload.data.relationships;
       if (!transaction) {
         return {
           statusCode: 400,
-          body: 'transaction will always be true for a transaction webhook but i cbs fixing the typings'
+          body: 'transaction will always be true for a transaction webhook but i cbs fixing the typings',
         };
       }
       await ratOutTransaction(transaction);
       return {
         statusCode: 200,
-        body: 'handled a-ok'
+        body: 'handled a-ok',
       };
     }
     case 'PING':
       await pingPong();
       return {
         statusCode: 200,
-        body: 'pong'
+        body: 'pong',
       };
     default:
       return {
         statusCode: 404,
-        body: 'a webhook event of an unsupported type was passed to the server'
+        body: 'a webhook event of an unsupported type was passed to the server',
       };
   }
 };
