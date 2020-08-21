@@ -37,11 +37,11 @@ async function ratOutTransaction(transaction: Relationship) {
   const foreignAmount = res.data.attributes.foreignAmount?.value.replace('-', '');
 
   const isBigMoneyInvolved = !isPurchase && Number(money) > 100;
-  const isBlockedAction = /transfer/i.test(description);
+  const isBlockedAction = /(transfer|round up)/i.test(description);
 
   if (isBigMoneyInvolved || isBlockedAction) {
     // Cap reimbursements at $100 to avoid leaking salaries.
-    // Also, block transfers from being sent.
+    // Also, block transfers and round ups from being sent.
     return;
   }
 
