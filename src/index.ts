@@ -5,17 +5,31 @@ import crypto from 'crypto';
 // eslint-disable-next-line import/extensions
 import { WebhookResponse, Relationship, TransactionResponse } from './upbank';
 
-async function ratOutTransaction(transaction: Relationship) {
-  if (!process.env.DISCORD_WEBHOOK_ID
-    || !process.env.DISCORD_WEBHOOK_TOKEN
-    || !process.env.UP_AUTH_TOKEN) {
+async function sendHook(callback: (hook: Discord.WebhookClient) => Promise<Discord.Message>) {
+  if (!process.env.DISCORD_WEBHOOKS) {
     return;
   }
 
-  const hook = new Discord.WebhookClient(
-    process.env.DISCORD_WEBHOOK_ID,
-    process.env.DISCORD_WEBHOOK_TOKEN,
-  );
+  const messageRequests = process.env.DISCORD_WEBHOOKS.split(',').map(async (webhook) => {
+    const webhookData = webhook.split(':');
+    const webhookId = webhookData[0];
+    const webhookToken = webhookData[1];
+    const hook = new Discord.WebhookClient(
+      webhookId,
+      webhookToken,
+    );
+
+    await callback(hook);
+  });
+
+  await Promise.all(messageRequests);
+}
+
+async function ratOutTransaction(transaction: Relationship) {
+  if (!process.env.DISCORD_WEBHOOKS
+    || !process.env.UP_AUTH_TOKEN) {
+    return;
+  }
 
   const rawResponse = await fetch(transaction.links.related, {
     headers: new Headers({
@@ -67,7 +81,7 @@ async function ratOutTransaction(transaction: Relationship) {
     });
   }
 
-  await hook.send(`${process.env.UP_ACCOUNT_HOLDER ?? 'The bot owner'} just ${action} $${money} on ${description}!`, {
+  await sendHook((hook) => hook.send(`${process.env.UP_ACCOUNT_HOLDER ?? 'The bot owner'} just ${action} $${money} on ${description}!`, {
     embeds: [
       {
         title: cashback ? 'New Reimbursement' : 'New Purchase',
@@ -76,19 +90,11 @@ async function ratOutTransaction(transaction: Relationship) {
         fields,
       },
     ],
-  });
+  }));
 }
 
 async function pingPong() {
-  if (!process.env.DISCORD_WEBHOOK_ID || !process.env.DISCORD_WEBHOOK_TOKEN) {
-    return;
-  }
-
-  const hook = new Discord.WebhookClient(
-    process.env.DISCORD_WEBHOOK_ID,
-    process.env.DISCORD_WEBHOOK_TOKEN,
-  );
-  await hook.send('Someone just pinged the Up API which, in turn, pinged this bot. Just checking in to say: pong.');
+  await sendHook((hook) => hook.send('Someone just pinged the Up API which, in turn, pinged this bot. Just checking in to say: pong.'));
 }
 
 // eslint-disable-next-line import/prefer-default-export, max-len

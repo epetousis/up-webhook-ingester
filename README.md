@@ -10,8 +10,6 @@ Feel free to use this yourself or reuse the type definitions.
 
 This was hacked together in like an hour or two for fun, please don't judge _too_ hard.
 
-This Lambda function relies on the default environment variable encryption to store the Up API token, which isn't entirely recommended.
-
 ## How to install
 
 Warning: this uses AWS Lambda.
@@ -33,13 +31,15 @@ Where `url` is the endpoint for your Lambda function.
 
 ```json
 {
-    "DISCORD_WEBHOOK_ID": "/* Webhook ID for a channel specific webhook (second-last path component of the webhook URL) */",
-    "DISCORD_WEBHOOK_TOKEN": "/* Webhook token (last path component of the webhook URL) */",
+    "DISCORD_WEBHOOKS": "/* Webhook IDs and tokens for channel specific webhooks */",
     "UP_ACCOUNT_HOLDER": "/* The name to use for Discord messages */",
     "UP_AUTH_TOKEN": "/* Up Bank API Personal Token */",
     "UP_WEBHOOK_SECRET": "/* Up Bank Webhook Secret retrieved from the API upon webhook creation */"
 }
 ```
+
+You'll need to create a webhook in Discord for each channel you want the bot to post in, and then take the second-last and last path component of the webhook URL and store it in `ID:TOKEN` format. You can have multiple webhooks comma-separated, such as `ID:TOKEN,ID:TOKEN,ID:TOKEN`, and these webhooks can be from multiple different servers.
+
 4. Run `npm run deploy`. You may need to update the profile and region in the `serverless.yml` config or add `--region [aws region] --aws-profile [profile]` to the end of the deploy script in `package.json`.
 5. Test with a ping and by transferring some money from your savings account to spending
 6. Lose all self esteem

@@ -32,8 +32,7 @@ functions:
                         headers:
                             X-Up-Authenticity-Signature: true
         environment:
-            DISCORD_WEBHOOK_ID: ${file(./config.json):DISCORD_WEBHOOK_ID}
-            DISCORD_WEBHOOK_TOKEN: ${file(./config.json):DISCORD_WEBHOOK_TOKEN}
+            DISCORD_WEBHOOKS: ${file(./config.json):DISCORD_WEBHOOKS}
             UP_ACCOUNT_HOLDER: ${file(./config.json):UP_ACCOUNT_HOLDER}
             UP_AUTH_TOKEN: ${file(./config.json):UP_AUTH_TOKEN}
             UP_WEBHOOK_SECRET: ${file(./config.json):UP_WEBHOOK_SECRET}
