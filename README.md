@@ -41,5 +41,5 @@ Where `url` is the endpoint for your Lambda function.
 You'll need to create a webhook in Discord for each channel you want the bot to post in, and then take the second-last and last path component of the webhook URL and store it in `ID:TOKEN` format. You can have multiple webhooks comma-separated, such as `ID:TOKEN,ID:TOKEN,ID:TOKEN`, and these webhooks can be from multiple different servers.
 
 4. Run `npm run deploy`. You may need to update the profile and region in the `serverless.yml` config or add `--region [aws region] --aws-profile [profile]` to the end of the deploy script in `package.json`.
-5. Test with a ping and by transferring some money from your savings account to spending
+5. Test with a webhook ping.
 6. Lose all self esteem
