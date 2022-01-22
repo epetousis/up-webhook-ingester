@@ -26,6 +26,6 @@
   "dependencies": {
     "@types/node-fetch": "^2.5.7",
     "discord.js": "^12.2.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^3.1.1"
   }
 }
