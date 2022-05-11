@@ -2,7 +2,6 @@ service: up-webhook-ingester
 
 provider:
     name: aws
-    profile: personalacc
     region: ap-southeast-2
     stage: ${opt:stage, 'dev'}
 
