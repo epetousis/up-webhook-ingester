@@ -1,5 +1,4 @@
-service:
-    name: up-webhook-ingester
+service: up-webhook-ingester
 
 provider:
     name: aws
