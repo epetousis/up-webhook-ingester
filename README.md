@@ -17,7 +17,7 @@ Warning: this uses AWS Lambda.
 1. Install [Serverless](https://www.serverless.com/framework/docs/getting-started/).
 2. Clone this repo.
 3. Run `npm install && npm run deploy`. You may need to update the profile and region in the `serverless.yml` config or add `--region [aws region] --aws-profile [profile]` to the end of the deploy script in `package.json`.
-4. POST to https://api.up.com.au/api/v1/webhooks with this body:
+4. POST to https://api.up.com.au/api/v1/webhooks (you can use a tool like [Insomnia](https://insomnia.rest/) or [Postman](https://www.postman.com/)) [with a Bearer Auth header using your Personal Access Token as a value](https://developer.up.com.au/#post_webhooks) (e.g. `Authorization: Bearer up:demo:uFHtxi6JnFtqrx1o`), and with this body:
 ```json
 {
 	"data": {
