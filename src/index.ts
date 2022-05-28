@@ -43,7 +43,7 @@ async function ratOutTransaction(transaction: Relationship) {
     throw new Error(`Errors detected while getting transaction. Ensure your API token is correct. ${JSON.stringify(res.errors)}`);
   }
 
-  const { description, cashback } = res.data.attributes;
+  const { description, cashback, message } = res.data.attributes;
   const isPurchase = res.data.attributes.amount.value.includes('-');
   const money = res.data.attributes.amount.value.replace('-', '');
 
@@ -73,6 +73,15 @@ async function ratOutTransaction(transaction: Relationship) {
       value: `$${money}`,
     },
   ];
+
+  if (message) {
+    fields.push(
+      {
+        name: 'Message',
+        value: `${message}`,
+      },
+    );
+  }
 
   if (foreignAmount && foreignCurrency) {
     fields.push({
