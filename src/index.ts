@@ -60,8 +60,8 @@ async function ratOutTransaction(transaction: Relationship) {
 
   const status = res.data.attributes.status.toLowerCase();
 
-  const action = isPurchase ? 'got reimbursed' : 'spent';
-  const preposition = isPurchase ? 'by' : 'on';
+  const action = !isPurchase ? 'got reimbursed' : 'spent';
+  const preposition = !isPurchase ? 'by' : 'on';
 
   const fields = [
     {
