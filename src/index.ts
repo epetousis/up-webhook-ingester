@@ -61,7 +61,8 @@ async function ratOutTransaction(transaction: Relationship) {
 
   const status = res.data.attributes.status.toLowerCase();
 
-  const action = cashback ? 'got reimbursed' : 'spent';
+  const action = isPurchase ? 'got reimbursed' : 'spent';
+  const preposition = isPurchase ? 'by' : 'on';
 
   const fields = [
     {
@@ -81,7 +82,7 @@ async function ratOutTransaction(transaction: Relationship) {
     });
   }
 
-  await sendHook((hook) => hook.send(`${process.env.UP_ACCOUNT_HOLDER ?? 'The bot owner'} just ${action} $${money} on ${description}!`, {
+  await sendHook((hook) => hook.send(`${process.env.UP_ACCOUNT_HOLDER ?? 'The bot owner'} just ${action} $${money} ${preposition} ${description}!`, {
     embeds: [
       {
         title: cashback ? 'New Reimbursement' : 'New Purchase',
