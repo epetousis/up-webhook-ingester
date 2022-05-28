@@ -53,9 +53,8 @@ async function ratOutTransaction(transaction: Relationship) {
   const isBigMoneyInvolved = !isPurchase && Number(money) > 100;
   const isBlockedAction = /(transfer|round up)/i.test(description);
 
-  if (isBigMoneyInvolved || isBlockedAction) {
-    // Cap reimbursements at $100 to avoid leaking salaries.
-    // Also, block transfers and round ups from being sent.
+  if (isBlockedAction) {
+    // Block transfers and round ups from being sent.
     return;
   }
 
@@ -82,7 +81,8 @@ async function ratOutTransaction(transaction: Relationship) {
     });
   }
 
-  await sendHook((hook) => hook.send(`${process.env.UP_ACCOUNT_HOLDER ?? 'The bot owner'} just ${action} $${money} ${preposition} ${description}!`, {
+  // Obfuscate transactions greater than $100 to avoid leaking salaries.
+  await sendHook((hook) => hook.send(`${process.env.UP_ACCOUNT_HOLDER ?? 'The bot owner'} just ${action} $${isBigMoneyInvolved ? '100+' : money} ${preposition} ${description}!`, {
     embeds: [
       {
         title: cashback ? 'New Reimbursement' : 'New Purchase',
