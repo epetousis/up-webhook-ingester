@@ -52,6 +52,8 @@ async function ratOutTransaction(transaction: Relationship) {
 
   const isBigMoneyInvolved = !isPurchase && Number(money) > 100;
   const isBlockedAction = /(transfer|round up)/i.test(description);
+  // Obfuscate transactions greater than $100 to avoid leaking salaries.
+  const publicFacingMoney = isBigMoneyInvolved ? '100+' : money;
 
   if (isBlockedAction) {
     // Block transfers and round ups from being sent.
@@ -70,7 +72,7 @@ async function ratOutTransaction(transaction: Relationship) {
     },
     {
       name: 'Cost',
-      value: `$${money}`,
+      value: `$${publicFacingMoney}`,
     },
   ];
 
@@ -90,8 +92,7 @@ async function ratOutTransaction(transaction: Relationship) {
     });
   }
 
-  // Obfuscate transactions greater than $100 to avoid leaking salaries.
-  await sendHook((hook) => hook.send(`${process.env.UP_ACCOUNT_HOLDER ?? 'The bot owner'} just ${action} $${isBigMoneyInvolved ? '100+' : money} ${preposition} ${description}!`, {
+  await sendHook((hook) => hook.send(`${process.env.UP_ACCOUNT_HOLDER ?? 'The bot owner'} just ${action} $${publicFacingMoney} ${preposition} ${description}!`, {
     embeds: [
       {
         title: cashback ? 'New Reimbursement' : 'New Purchase',
