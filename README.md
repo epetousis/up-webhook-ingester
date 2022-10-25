@@ -7,7 +7,7 @@ Feel free to use this yourself or reuse the type definitions.
 ![A screenshot of the bot in action in Discord](docs/screenshot.png)
 
 > **Note**
-> Looking for the original TypeScript version? Check out the [js-legacy branch!](/epetousis/up-webhook-ingester/tree/js-legacy).
+> Looking for the original TypeScript version? Check out the [js-legacy branch!](https://github.com/epetousis/up-webhook-ingester/tree/js-legacy).
 
 ## Important clarification
 
