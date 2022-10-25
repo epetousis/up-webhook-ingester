@@ -6,6 +6,9 @@ Feel free to use this yourself or reuse the type definitions.
 
 ![A screenshot of the bot in action in Discord](docs/screenshot.png)
 
+> **Note**
+> Looking for the original TypeScript version? Check out the [js-legacy branch!](/epetousis/up-webhook-ingester/tree/js-legacy).
+
 ## Important clarification
 
 This was hacked together in like a day or two for fun with near-zero knowledge of Rust (and lots of potential panic points that need to be fixed), please don't judge _too_ hard.
